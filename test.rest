@@ -1,0 +1,7 @@
+@host=http://localhost:3000
+
+#
+POST {{host}}/congrats
+Content-Type: application/json
+
+###
