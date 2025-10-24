@@ -1,0 +1,25 @@
+services:
+  # Servicio para la base de datos PostgreSQL
+  postgres_db:
+    # Utilizamos la imagen oficial de PostgreSQL
+    image: postgres:14-alpine
+    container_name: congratulations-db
+    restart: always
+    # Mapeamos el puerto 5432 del contenedor al puerto 5432 de tu máquina (puedes cambiarlo si es necesario)
+    ports:
+      - "5432:5432"
+    # Variables de entorno de PostgreSQL
+    environment:
+      # Nombre de la base de datos (DB_NAME)
+      POSTGRES_DB: congratulations_db
+      # Usuario de la base de datos (DB_USER)
+      POSTGRES_USER: congrats_user
+      # Contraseña del usuario (DB_PASSWORD)
+      POSTGRES_PASSWORD: supersecurepassword
+    # Montamos un volumen para que los datos persistan
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# Volúmenes para persistir los datos
+volumes:
+  postgres_data:

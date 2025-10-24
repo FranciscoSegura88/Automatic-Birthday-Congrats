@@ -7,8 +7,14 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    "module": "NodeNext",
     "target": "es2024",
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
@@ -35,7 +41,7 @@
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    //"verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
@@ -43,5 +49,6 @@
   },
   "ts-node": {
     "esm": true
-  }
+  },
+  "include": ["src/**/*"]
 }
