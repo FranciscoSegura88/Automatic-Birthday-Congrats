@@ -14,9 +14,9 @@ export interface CongratsModel
   > {
   id: CreationOptional<number>;
   userId: number;
-  status: number;
+  status: CreationOptional<number>;
   content: string;
-  sentAt: Date;
+  sentAt: CreationOptional<Date>;
 }
 
 const CongratsModel = sequelize.define<CongratsModel>(
@@ -47,5 +47,7 @@ const CongratsModel = sequelize.define<CongratsModel>(
   },
   {},
 );
+
+CongratsModel.sync();
 
 export default CongratsModel;

@@ -3,7 +3,9 @@ import { type Request, type Response } from 'express';
 import { Op, col, fn, where } from 'sequelize';
 import Academic from '../models/academic.js';
 import CongratsModel from '../models/congrats.js';
-import { crearPDFFelicitacion } from '../services/generateCongratsPDF.js';
+
+import { generarFelicitacion } from '../services/generateCongratsPDF.js';
+import sendPdf from '../services/sendPdf.js';
 
 export async function createCongratsPDF(
   req: Request,
@@ -20,32 +22,34 @@ export async function createCongratsPDF(
     },
   });
 
-  const sendedUserIds = sendedCongrats.map((c) => c.userId);
+  // const sendedUserIds = sendedCongrats.map((c) => c.userId);
 
   const todaysBirthdays = await Academic.findAll({
     where: {
-      enabled: true, // Using 'enabled' field from your model
+      enabled: true,
       [Op.and]: [
-        where(fn('EXTRACT', 'MONTH', col('birthdate')), today.month()),
-        where(fn('EXTRACT', 'DAY', col('birthdate')), today.day()),
+        where(fn('DATE_PART', 'month', col('birthdate')), today.month() + 1),
+        where(fn('DATE_PART', 'day', col('birthdate')), today.date()),
       ],
-      id: {
-        [Op.notIn]: sendedUserIds,
-      },
+      // id: {
+      //   [Op.notIn]: sendedUserIds,
+      // },
     },
   });
 
+  console.log(
+    `Se encontraron ${todaysBirthdays.length} académicos con cumpleaños hoy.`,
+  );
+
   await Promise.all(
     todaysBirthdays.map(async (a) => {
-      const content = await crearPDFFelicitacion(a);
-      return CongratsModel.create({
-        userId: a.id,
-        status: 1,
-        content,
-        sentAt: new Date(),
-      });
+      return sendPdf(a, await generarFelicitacion(a));
     }),
   );
 
-  res.json({ message: 'PDF de felicitación creado exitosamente.' });
+  console.log('Todos los PDFs de felicitación han sido procesados.');
+
+  res.json({
+    message: `${todaysBirthdays.length} PDFs de felicitación creado exitosamente.`,
+  });
 }

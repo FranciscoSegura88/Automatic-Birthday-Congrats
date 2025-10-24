@@ -70,4 +70,6 @@ const AcademicModel = sequelize.define<AcademicModel>(
   {},
 );
 
+AcademicModel.sync();
+
 export default AcademicModel;

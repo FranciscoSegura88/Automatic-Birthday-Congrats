@@ -5,3 +5,9 @@ POST {{host}}/congrats
 Content-Type: application/json
 
 ###
+PUT {{host}}/academic/1
+Content-Type: application/json
+
+{
+  "enabled": false
+}
