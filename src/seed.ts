@@ -9,7 +9,7 @@ async function seedDatabase() {
     console.log('Conexion a la base de datos establecida.');
 
     await AcademicModel.sync({ alter: true });
-    await CongratsModel.sync({ alter: true});
+    await CongratsModel.sync({ alter: true });
 
     const todayMonthDay = dayjs().format('-MM-DD');
     const lastYear = dayjs().subtract(1, 'year').year();

@@ -1,4 +1,4 @@
-import { Base64Encode } from 'base64-stream';
+import type { Base64Encode as Base64EncodeType } from 'base64-stream';
 import type PDFDocumentType from 'pdfkit';
 import type { AcademicModel } from '../models/academic.js';
 
@@ -58,11 +58,15 @@ function generarTextoFelicitacion({
 export async function crearPDFFelicitacion(
   academic: AcademicModel,
 ): Promise<string> {
-  const { firstName, lastName, degree: titulo, department } = academic;
-  const name = `${firstName} ${lastName}`;
+  // --- CORRECCIÓN DE IMPORTACIÓN DINÁMICA ---
+  const base64Module = await import('base64-stream');
+  const Base64Encode = (base64Module as any)
+    .Base64Encode as typeof Base64EncodeType;
 
   const pdfkitModule = await import('pdfkit');
-  const PDFDocument = (pdfkitModule as any).default as typeof PDFDocumentType;
+  const PDFDocument = (pdfkitModule as any).default as typeof PDFDocumentType; // --- FIN DE LA CORRECCIÓN ---
+  const { firstName, lastName, degree: titulo, department } = academic;
+  const name = `${firstName} ${lastName}`;
 
   const doc = new PDFDocument({
     size: 'A4',

@@ -46,26 +46,18 @@ export async function runBirthdayCongratsJob(): Promise<{
     const todaysBirthdays = await Academic.findAll({
       where: {
         enabled: true,
-
-          // POR ESTO (MÁS SEGURO):
-          [Op.and]: [
-              sequelize.literal(`EXTRACT(MONTH FROM "birthdate") = ${today.month() + 1}`),
-              sequelize.literal(`EXTRACT(DAY FROM "birthdate") = ${today.date()}`)
-          ],
+        [Op.and]: [
+          sequelize.literal(
+            `EXTRACT(MONTH FROM "birthdate") = ${today.month() + 1}`,
+          ),
+          sequelize.literal(`EXTRACT(DAY FROM "birthdate") = ${today.date()}`),
+        ],
 
         id: {
           [Op.notIn]: processedUserIds,
-          },
+        },
       },
     });
-
-    if (todaysBirthdays.length === 0) {
-      return {
-        successCount: 0,
-        failureCount: 0,
-        message: 'No hay cumpleaños nuevos para procesar hoy.',
-      };
-    }
 
     // 3. Procesar CADA cumpleañero (Bucle for of: se mantiene igual)
     let successCount = 0;
@@ -176,10 +168,8 @@ export async function createCongratsPDF(
     res.json(result); // Devuelve la respuesta HTTP
   } catch (error: any) {
     console.error('Error en el endpoint de la API:', error);
-    res
-      .status(500)
-      .json({
-        message: 'Error interno del servidor al procesar felicitaciones.',
-      });
+    res.status(500).json({
+      message: 'Error interno del servidor al procesar felicitaciones.',
+    });
   }
 }
