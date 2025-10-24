@@ -1,8 +1,8 @@
 import { runBirthdayCongratsJob } from '../controllers/congrats.js';
-import sequelize from '../db.ts';
+import sequelize from '../db.js';
 // Importamos modelos para asegurar que Sequelize los cargue
-import AcademicModel from '../models/academic.ts';
-import CongratsModel from '../models/congrats.ts';
+import AcademicModel from '../models/academic.js';
+import CongratsModel from '../models/congrats.js';
 
 async function startWorkerJob() {
   try {

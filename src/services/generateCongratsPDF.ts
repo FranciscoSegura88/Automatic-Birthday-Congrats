@@ -1,5 +1,5 @@
 import { Base64Encode } from 'base64-stream';
-import PDFDocument from 'pdfkit';
+import type PDFDocumentType from 'pdfkit';
 import type { AcademicModel } from '../models/academic.js';
 
 function generarTextoFelicitacion({
@@ -60,6 +60,9 @@ export async function crearPDFFelicitacion(
 ): Promise<string> {
   const { firstName, lastName, degree: titulo, department } = academic;
   const name = `${firstName} ${lastName}`;
+
+  const pdfkitModule = await import('pdfkit');
+  const PDFDocument = (pdfkitModule as any).default as typeof PDFDocumentType;
 
   const doc = new PDFDocument({
     size: 'A4',

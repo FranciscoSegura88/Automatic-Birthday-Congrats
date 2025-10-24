@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import AcademicModel from './models/academic.js';
+import CongratsModel from './models/congrats.js';
 import sequelize from './db.js';
 
 async function seedDatabase() {
@@ -8,6 +9,7 @@ async function seedDatabase() {
     console.log('Conexion a la base de datos establecida.');
 
     await AcademicModel.sync({ alter: true });
+    await CongratsModel.sync({ alter: true});
 
     const todayMonthDay = dayjs().format('-MM-DD');
     const lastYear = dayjs().subtract(1, 'year').year();
@@ -15,12 +17,12 @@ async function seedDatabase() {
 
     const [academic, created] = await AcademicModel.upsert({
       id: 9999,
-      firstName: 'Eduardo',
-      lastName: 'Gonzalez',
+      firstName: 'Joselaine',
+      lastName: 'Nomesetuapellido',
       gender: 'M',
       enabled: true,
       degree: 'Ing.',
-      email: 'eduardogonzalezit021@gmail.com',
+      email: 'dealbajoselyne@gmail.com',
       birthdate: new Date(birthdateToday),
       department: 'Sistemas',
     });

@@ -5,6 +5,7 @@ import { type Request, type Response } from 'express';
 import { Op, col, fn, where } from 'sequelize';
 import Academic from '../models/academic.js';
 import CongratsModel from '../models/congrats.js';
+import sequelize from '../db.js';
 import { crearPDFFelicitacion } from '../services/generateCongratsPDF.js';
 import { sendEmail } from '../services/emailService.js';
 
@@ -45,19 +46,18 @@ export async function runBirthdayCongratsJob(): Promise<{
     const todaysBirthdays = await Academic.findAll({
       where: {
         enabled: true,
-        [Op.and]: [
-          where(fn('EXTRACT', 'MONTH', col('birthdate')), today.month() + 1),
-          where(fn('EXTRACT', 'DAY', col('birthdate')), today.date()),
-        ],
+
+          // POR ESTO (MÁS SEGURO):
+          [Op.and]: [
+              sequelize.literal(`EXTRACT(MONTH FROM "birthdate") = ${today.month() + 1}`),
+              sequelize.literal(`EXTRACT(DAY FROM "birthdate") = ${today.date()}`)
+          ],
+
         id: {
           [Op.notIn]: processedUserIds,
-        },
+          },
       },
     });
-
-    console.log(
-      `Encontrados ${todaysBirthdays.length} cumpleaños para procesar hoy.`,
-    );
 
     if (todaysBirthdays.length === 0) {
       return {
